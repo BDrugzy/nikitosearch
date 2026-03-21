@@ -2,10 +2,47 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Вход - Nikitosearch</title>
-    <link rel="stylesheet" href="style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #FFA500;
+            font-family: Arial, sans-serif;
+        }
+
+        /* === ВЕРХНЕЕ МЕНЮ (ЧЕРНАЯ ПОЛОСА) === */
+        .top-nav {
+            background-color: #000000;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        .top-nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .top-nav a:hover {
+            color: #FFA500;
+        }
+
+        /* === ФОРМА ВХОДА === */
         .auth-container {
             flex: 1;
             display: flex;
@@ -17,7 +54,7 @@
         .auth-form {
             background-color: #000000;
             border-radius: 15px;
-            padding: 40px;
+            padding: 40px 20px;
             width: 100%;
             max-width: 400px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
@@ -66,13 +103,11 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
             margin-top: 10px;
         }
         
         .btn:hover {
             background-color: #FF8C00;
-            transform: translateY(-2px);
         }
         
         .auth-link {
@@ -86,10 +121,6 @@
             text-decoration: none;
         }
         
-        .auth-link a:hover {
-            text-decoration: underline;
-        }
-        
         .message {
             background-color: #ff4444;
             color: white;
@@ -100,27 +131,49 @@
             display: none;
         }
         
+        /* === ФУТЕР === */
         footer {
             background-color: #000000;
             padding: 20px 0;
+            margin-top: 50px;
             text-align: center;
-            margin-top: auto;
         }
         
         footer a {
             color: #FFFFFF;
             text-decoration: none;
             margin: 0 15px;
+            display: inline-block;
         }
         
         footer a:hover {
             color: #FFA500;
         }
         
+        .footer-links {
+            margin-bottom: 15px;
+        }
+        
         .footer-note p {
-            color: #CCCCCC;
+            margin: 5px 0;
             font-size: 14px;
-            margin-top: 15px;
+            color: #CCCCCC;
+        }
+        
+        /* === ДЛЯ ТЕЛЕФОНОВ === */
+        @media (max-width: 768px) {
+            .top-nav a {
+                margin: 0 8px;
+                font-size: 14px;
+            }
+            
+            .auth-form {
+                padding: 30px 20px;
+            }
+            
+            .auth-form h2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -169,70 +222,56 @@
     </footer>
 
     <script>
-        // Получаем элементы
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
         
-        // Обработчик отправки формы
         loginForm.addEventListener('submit', function(event) {
             event.preventDefault();
             
-            // Получаем значения
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // Скрываем предыдущее сообщение
             errorMessage.style.display = 'none';
             
-            // Проверяем, что поля не пустые
             if (!email || !password) {
                 showError('Пожалуйста, заполните все поля');
                 return;
             }
             
-            // Получаем список пользователей из localStorage
             let users = localStorage.getItem('users');
             
-            // Если нет зарегистрированных пользователей
             if (!users) {
-                showError('Аккаунт не найден. Пожалуйста, зарегистрируйтесь сначала.');
+                showError('Аккаунт не найден. Пожалуйста, зарегистрируйтесь.');
                 return;
             }
             
-            // Преобразуем строку в массив
             const usersArray = JSON.parse(users);
             
-            // Проверяем, есть ли зарегистрированные пользователи
             if (usersArray.length === 0) {
                 showError('Аккаунт не найден. Пожалуйста, зарегистрируйтесь.');
                 return;
             }
             
-            // Ищем пользователя
             const foundUser = usersArray.find(user => user.email === email && user.password === password);
             
             if (foundUser) {
-                // Сохраняем информацию о текущем пользователе
                 localStorage.setItem('currentUser', JSON.stringify({
                     username: foundUser.username,
                     email: foundUser.email
                 }));
                 
-                // Показываем сообщение об успехе
                 errorMessage.style.backgroundColor = '#4CAF50';
                 errorMessage.textContent = 'Вход выполнен успешно! Перенаправление...';
                 errorMessage.style.display = 'block';
                 
-                // Перенаправляем на главную через 1.5 секунды
                 setTimeout(function() {
                     window.location.href = 'index.html';
                 }, 1500);
             } else {
-                showError('Неверный email или пароль. Попробуйте снова или зарегистрируйтесь.');
+                showError('Неверный email или пароль.');
             }
         });
         
-        // Функция показа ошибки
         function showError(message) {
             errorMessage.style.backgroundColor = '#ff4444';
             errorMessage.textContent = message;
