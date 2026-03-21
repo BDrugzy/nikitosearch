@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация - Nikitosearch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #FFA500;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-nav {
+            background-color: #000000;
+            padding: 15px 0;
+            text-align: center;
+        }
+
+        .top-nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin: 0 25px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .top-nav a:hover {
+            color: #FFA500;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .auth-form {
+            background-color: #000000;
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .auth-form h2 {
+            color: #FFA500;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #FFA500;
+            border-radius: 8px;
+            background-color: #222;
+            color: #FFFFFF;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #FF8C00;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FFA500;
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #FF8C00;
+            transform: translateY(-2px);
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #CCCCCC;
+        }
+
+        .auth-link a {
+            color: #FFA500;
+            text-decoration: none;
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Сообщение об ошибке */
+        .error-message {
+            background-color: #ff4444;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        footer {
+            background-color: #000000;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+
+        footer a:hover {
+            color: #FFA500;
+        }
+
+        .footer-note p {
+            color: #CCCCCC;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <a href="index.html">Главная</a>
+        <a href="games.html">Игры</a>
+        <a href="items.html">Предметы</a>
+        <a href="graphics.html">Графика</a>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-form">
+            <h2>Регистрация</h2>
+            
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+            
+            <form id="registerForm">
+                <div class="input-group">
+                    <label>Имя пользователя</label>
+                    <input type="text" id="username" placeholder="Придумайте логин" required>
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="Ваш email" required>
+                </div>
+                <div class="input-group">
+                    <label>Пароль</label>
+                    <input type="password" id="password" placeholder="Придумайте пароль" required>
+                </div>
+                <div class="input-group">
+                    <label>Подтверждение пароля</label>
+                    <input type="password" id="confirmPassword" placeholder="Повторите пароль" required>
+                </div>
+                <button type="submit" class="btn">Зарегистрироваться</button>
+            </form>
+            <div class="auth-link">
+                Уже есть аккаунт? <a href="login.html">Войти</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <a href="login.html">Вход</a>
+            <a href="register.html">Регистрация</a>
+            <a href="mailto:akimivanov02@gmail.com">Связь с нами</a>
+        </div>
+        <div class="footer-note">
+            <p>© 2026 ООО Босс Никитосс</p>
+        </div>
+    </footer>
+
+    <script>
+        // Получаем форму
+        const form = document.getElementById('registerForm');
+        
+        // Обработчик отправки формы
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Отменяем стандартную отправку
+            
+            // Получаем значения полей
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Очищаем сообщения
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Проверяем, что поля заполнены
+            if (!username || !email || !password || !confirmPassword) {
+                showError('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            // Проверяем совпадение паролей
+            if (password !== confirmPassword) {
+                showError('Пароли не совпадают');
+                return;
+            }
+            
+            // Проверяем длину пароля
+            if (password.length < 6) {
+                showError('Пароль должен содержать минимум 6 символов');
+                return;
+            }
+            
+            // Проверяем email
+            if (!email.includes('@') || !email.includes('.')) {
+                showError('Введите корректный email');
+                return;
+            }
+            
+            // Сохраняем данные пользователя в localStorage
+            const userData = {
+                username: username,
+                email: email,
+                password: password,
+                registered: new Date().toLocaleString()
+            };
+            
+            // Получаем существующих пользователей или создаем пустой массив
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Проверяем, не существует ли уже такой email
+            const userExists = users.some(user => user.email === email);
+            if (userExists) {
+                showError('Пользователь с таким email уже зарегистрирован');
+                return;
+            }
+            
+            // Добавляем нового пользователя
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Сохраняем текущего пользователя как авторизованного
+            localStorage.setItem('currentUser', JSON.stringify({
+                username: username,
+                email: email
+            }));
+            
+            // Показываем сообщение об успехе
+            showSuccess('Регистрация прошла успешно! Перенаправляем на главную...');
+            
+            // Перенаправляем на главную через 2 секунды
+            setTimeout(function() {
+                window.location.href = 'Главная.html';
+            }, 2000);
+        });
+        
+        // Функция показа ошибки
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        // Функция показа успеха
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
