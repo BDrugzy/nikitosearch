@@ -2,40 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход - Nikitosearch</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #FFA500;
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .top-nav {
-            background-color: #000000;
-            padding: 15px 0;
-            text-align: center;
-        }
-
-        .top-nav a {
-            color: #FFFFFF;
-            text-decoration: none;
-            margin: 0 25px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .top-nav a:hover {
-            color: #FFA500;
-        }
-
         .auth-container {
             flex: 1;
             display: flex;
@@ -43,7 +13,7 @@
             align-items: center;
             padding: 40px 20px;
         }
-
+        
         .auth-form {
             background-color: #000000;
             border-radius: 15px;
@@ -52,25 +22,25 @@
             max-width: 400px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
-
+        
         .auth-form h2 {
             color: #FFA500;
             text-align: center;
             margin-bottom: 30px;
             font-size: 28px;
         }
-
+        
         .input-group {
             margin-bottom: 20px;
         }
-
+        
         .input-group label {
             display: block;
             color: #FFFFFF;
             margin-bottom: 8px;
             font-size: 14px;
         }
-
+        
         .input-group input {
             width: 100%;
             padding: 12px 15px;
@@ -80,7 +50,12 @@
             color: #FFFFFF;
             font-size: 16px;
         }
-
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #FF8C00;
+        }
+        
         .btn {
             width: 100%;
             padding: 12px;
@@ -91,53 +66,61 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
             margin-top: 10px;
         }
-
+        
         .btn:hover {
             background-color: #FF8C00;
+            transform: translateY(-2px);
         }
-
+        
         .auth-link {
             text-align: center;
             margin-top: 20px;
             color: #CCCCCC;
         }
-
+        
         .auth-link a {
             color: #FFA500;
             text-decoration: none;
         }
-
+        
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+        
         .message {
             background-color: #ff4444;
             color: white;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
             display: none;
         }
-
-        .success {
-            background-color: #4CAF50;
-        }
-
+        
         footer {
             background-color: #000000;
             padding: 20px 0;
             text-align: center;
             margin-top: auto;
         }
-
+        
         footer a {
             color: #FFFFFF;
             text-decoration: none;
             margin: 0 15px;
         }
-
+        
         footer a:hover {
             color: #FFA500;
+        }
+        
+        .footer-note p {
+            color: #CCCCCC;
+            font-size: 14px;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -147,13 +130,15 @@
         <a href="games.html">Игры</a>
         <a href="items.html">Предметы</a>
         <a href="graphics.html">Графика</a>
+        <a href="characters.html">Персонажи</a>
+        <a href="reviews.html">Отзывы</a>
     </nav>
 
     <div class="auth-container">
         <div class="auth-form">
             <h2>Вход в аккаунт</h2>
             
-            <div id="message" class="message"></div>
+            <div id="errorMessage" class="message"></div>
             
             <form id="loginForm">
                 <div class="input-group">
@@ -173,33 +158,20 @@
     </div>
 
     <footer>
-        <div>
+        <div class="footer-links">
             <a href="login.html">Вход</a>
             <a href="register.html">Регистрация</a>
             <a href="mailto:akimivanov02@gmail.com">Связь с нами</a>
+        </div>
+        <div class="footer-note">
+            <p>© 2026 ООО Босс Никитосс</p>
         </div>
     </footer>
 
     <script>
         // Получаем элементы
         const loginForm = document.getElementById('loginForm');
-        const messageDiv = document.getElementById('message');
-        
-        // Функция для показа сообщения
-        function showMessage(text, isError = true) {
-            messageDiv.textContent = text;
-            messageDiv.style.display = 'block';
-            if (!isError) {
-                messageDiv.style.backgroundColor = '#4CAF50';
-            } else {
-                messageDiv.style.backgroundColor = '#ff4444';
-            }
-            
-            // Скрываем сообщение через 3 секунды
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 3000);
-        }
+        const errorMessage = document.getElementById('errorMessage');
         
         // Обработчик отправки формы
         loginForm.addEventListener('submit', function(event) {
@@ -209,57 +181,63 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            console.log('Попытка входа:', email); // Для отладки
+            // Скрываем предыдущее сообщение
+            errorMessage.style.display = 'none';
             
             // Проверяем, что поля не пустые
             if (!email || !password) {
-                showMessage('Пожалуйста, заполните все поля');
+                showError('Пожалуйста, заполните все поля');
                 return;
             }
             
             // Получаем список пользователей из localStorage
             let users = localStorage.getItem('users');
-            console.log('Сохраненные пользователи:', users); // Для отладки
             
-            // Если пользователей нет, создаем тестового
+            // Если нет зарегистрированных пользователей
             if (!users) {
-                console.log('Нет сохраненных пользователей, создаем тестового');
-                const testUser = [{
-                    username: 'test',
-                    email: 'test@test.com',
-                    password: '123456'
-                }];
-                localStorage.setItem('users', JSON.stringify(testUser));
-                users = JSON.stringify(testUser);
-                showMessage('Создан тестовый пользователь: test@test.com / 123456');
+                showError('Аккаунт не найден. Пожалуйста, зарегистрируйтесь сначала.');
                 return;
             }
             
             // Преобразуем строку в массив
             const usersArray = JSON.parse(users);
             
+            // Проверяем, есть ли зарегистрированные пользователи
+            if (usersArray.length === 0) {
+                showError('Аккаунт не найден. Пожалуйста, зарегистрируйтесь.');
+                return;
+            }
+            
             // Ищем пользователя
             const foundUser = usersArray.find(user => user.email === email && user.password === password);
             
             if (foundUser) {
-                console.log('Пользователь найден:', foundUser);
                 // Сохраняем информацию о текущем пользователе
                 localStorage.setItem('currentUser', JSON.stringify({
                     username: foundUser.username,
                     email: foundUser.email
                 }));
                 
-                showMessage('Вход выполнен успешно! Перенаправление...', false);
+                // Показываем сообщение об успехе
+                errorMessage.style.backgroundColor = '#4CAF50';
+                errorMessage.textContent = 'Вход выполнен успешно! Перенаправление...';
+                errorMessage.style.display = 'block';
                 
                 // Перенаправляем на главную через 1.5 секунды
-                setTimeout(() => {
-                    window.location.href = 'Главная.html';
+                setTimeout(function() {
+                    window.location.href = 'index.html';
                 }, 1500);
             } else {
-                console.log('Пользователь не найден');
-                showMessage('Неверный email или пароль. Попробуйте test@test.com / 123456');
+                showError('Неверный email или пароль. Попробуйте снова или зарегистрируйтесь.');
             }
         });
+        
+        // Функция показа ошибки
+        function showError(message) {
+            errorMessage.style.backgroundColor = '#ff4444';
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
     </script>
 </body>
 </html>
