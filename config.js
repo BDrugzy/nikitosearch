@@ -1,3 +1,3 @@
 // Конфигурация Supabase
-const SUPABASE_URL = 'https://stmyuztbsmzqdpahaaa.supabase.co';
+const SUPABASE_URL = 'https://stmyuztbsmzqdarhaaa.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0bXl1enRic216cWRhcHJoYWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMDMyMDIsImV4cCI6MjA4OTc3OTIwMn0.uV3Ugv0btI4B1z_R90h3b1NmdFbJ9bWJOmZEpEeqMgI';
