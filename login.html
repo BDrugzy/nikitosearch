@@ -91,14 +91,21 @@
             const response = await fetch(`${PROXY_URL}/api/issues?repo=${encodeURIComponent(GITHUB_REPO)}&token=${encodeURIComponent(GITHUB_TOKEN)}`);
             
             if (!response.ok) {
-                throw new Error('Ошибка сервера');
+                throw new Error('Ошибка сервера: ' + response.status);
             }
             
-            const issues = await response.json();
+            const data = await response.json();
+            
+            // Проверяем, что data - это массив
+            if (!Array.isArray(data)) {
+                console.error('Получены не массив:', data);
+                showError('Ошибка: сервер вернул неверные данные');
+                return;
+            }
             
             let foundUser = null;
             
-            for (const issue of issues) {
+            for (const issue of data) {
                 if (issue.title === `USER: ${email}`) {
                     const body = issue.body;
                     const passwordMatch = body.match(/password: (.+)/);
