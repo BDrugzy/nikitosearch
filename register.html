@@ -117,6 +117,30 @@
         }
         
         try {
+            // Сначала проверяем, существует ли пользователь
+            const checkResponse = await fetch(`${PROXY_URL}/api/issues?repo=${encodeURIComponent(GITHUB_REPO)}&token=${encodeURIComponent(GITHUB_TOKEN)}`);
+            
+            if (!checkResponse.ok) {
+                throw new Error('Ошибка сервера');
+            }
+            
+            const issues = await checkResponse.json();
+            
+            if (!Array.isArray(issues)) {
+                console.error('Получены не массив:', issues);
+                showError('Ошибка: сервер вернул неверные данные');
+                return;
+            }
+            
+            // Проверяем, есть ли уже такой email
+            const userExists = issues.some(issue => issue.title === `USER: ${email}`);
+            
+            if (userExists) {
+                showError('Пользователь с таким email уже зарегистрирован');
+                return;
+            }
+            
+            // Создаём нового пользователя
             const response = await fetch(`${PROXY_URL}/api/issues`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -138,7 +162,8 @@
                 showError(data.message || 'Ошибка регистрации');
             }
         } catch (error) {
-            showError('Ошибка подключения к серверу');
+            console.error('Ошибка:', error);
+            showError('Ошибка подключения к серверу: ' + error.message);
         }
     });
     
