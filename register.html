@@ -80,93 +80,73 @@
     </footer>
 
     <script src="config.js"></script>
-    <script>
-        // Добавьте это в самое начало тега <script>, перед всем остальным кодом
-window.fetch = new Proxy(window.fetch, {
-    apply: function(target, thisArg, args) {
-        let url = args[0];
-        if (url.includes('api.github.com')) {
-            url = 'https://cors-anywhere.herokuapp.com/' + url;
-            args[0] = url;
-            args[1] = args[1] || {};
-            args[1].headers = args[1].headers || {};
+    <script src="config.js"></script>
+<script>
+    const form = document.getElementById('registerForm');
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+    
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+        
+        if (!username || !email || !password || !confirmPassword) {
+            showError('Пожалуйста, заполните все поля');
+            return;
         }
-        return target.apply(thisArg, args);
+        
+        if (password !== confirmPassword) {
+            showError('Пароли не совпадают');
+            return;
+        }
+        
+        if (password.length < 6) {
+            showError('Пароль должен содержать минимум 6 символов');
+            return;
+        }
+        
+        if (!email.includes('@') || !email.includes('.')) {
+            showError('Введите корректный email');
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${PROXY_URL}/api/issues`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    repo: GITHUB_REPO,
+                    token: GITHUB_TOKEN,
+                    title: `USER: ${email}`,
+                    body: `username: ${username}\nemail: ${email}\npassword: ${password}\nregistered: ${new Date().toISOString()}`
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                successDiv.textContent = 'Регистрация прошла успешно! Перенаправляем на вход...';
+                successDiv.style.display = 'block';
+                setTimeout(() => window.location.href = 'login.html', 2000);
+            } else {
+                showError(data.message || 'Ошибка регистрации');
+            }
+        } catch (error) {
+            showError('Ошибка подключения к серверу');
+        }
+    });
+    
+    function showError(message) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
     }
-});
-        const form = document.getElementById('registerForm');
-        const errorDiv = document.getElementById('errorMessage');
-        const successDiv = document.getElementById('successMessage');
-        
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-            
-            if (!username || !email || !password || !confirmPassword) {
-                showError('Пожалуйста, заполните все поля');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showError('Пароли не совпадают');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showError('Пароль должен содержать минимум 6 символов');
-                return;
-            }
-            
-            if (!email.includes('@') || !email.includes('.')) {
-                showError('Введите корректный email');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        title: `USER: ${email}`,
-                        body: `username: ${username}\nemail: ${email}\npassword: ${password}\nregistered: ${new Date().toISOString()}`,
-                        labels: ['user']
-                    })
-                });
-                
-                if (response.ok) {
-                    successDiv.textContent = 'Регистрация прошла успешно! Перенаправляем на вход...';
-                    successDiv.style.display = 'block';
-                    
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-                } else {
-                    const error = await response.json();
-                    if (error.message && error.message.includes('already_exists')) {
-                        showError('Пользователь с таким email уже зарегистрирован');
-                    } else {
-                        showError('Ошибка регистрации. Попробуйте позже.');
-                    }
-                }
-            } catch (error) {
-                showError('Ошибка подключения к серверу. Проверьте интернет.');
-            }
-        });
-        
-        function showError(message) {
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-    </script>
+</script>
 </body>
 </html>
