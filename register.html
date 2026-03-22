@@ -81,6 +81,19 @@
 
     <script src="config.js"></script>
     <script>
+        // Добавьте это в самое начало тега <script>, перед всем остальным кодом
+window.fetch = new Proxy(window.fetch, {
+    apply: function(target, thisArg, args) {
+        let url = args[0];
+        if (url.includes('api.github.com')) {
+            url = 'https://cors-anywhere.herokuapp.com/' + url;
+            args[0] = url;
+            args[1] = args[1] || {};
+            args[1].headers = args[1].headers || {};
+        }
+        return target.apply(thisArg, args);
+    }
+});
         const form = document.getElementById('registerForm');
         const errorDiv = document.getElementById('errorMessage');
         const successDiv = document.getElementById('successMessage');
