@@ -88,18 +88,25 @@
         }
         
         try {
-            const response = await fetch(`${PROXY_URL}/api/issues?repo=${encodeURIComponent(GITHUB_REPO)}&token=${encodeURIComponent(GITHUB_TOKEN)}`);
+            const url = `${PROXY_URL}/api/issues?repo=${encodeURIComponent(GITHUB_REPO)}&token=${encodeURIComponent(GITHUB_TOKEN)}`;
+            console.log('Запрос к:', url);
             
-            if (!response.ok) {
-                throw new Error('Ошибка сервера: ' + response.status);
-            }
+            const response = await fetch(url);
+            console.log('Статус ответа:', response.status);
             
             const data = await response.json();
+            console.log('Полученные данные:', data);
+            
+            // Если пришла ошибка
+            if (data.error) {
+                showError('Ошибка сервера: ' + data.error);
+                return;
+            }
             
             // Проверяем, что data - это массив
             if (!Array.isArray(data)) {
                 console.error('Получены не массив:', data);
-                showError('Ошибка: сервер вернул неверные данные');
+                showError('Ошибка: сервер вернул неверные данные. Посмотрите в консоль (F12)');
                 return;
             }
             
