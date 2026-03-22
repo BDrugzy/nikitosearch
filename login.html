@@ -70,81 +70,65 @@
     </footer>
 
     <script src="config.js"></script>
-    <script>
-        // Добавьте это в самое начало тега <script>, перед всем остальным кодом
-window.fetch = new Proxy(window.fetch, {
-    apply: function(target, thisArg, args) {
-        let url = args[0];
-        if (url.includes('api.github.com')) {
-            url = 'https://cors-anywhere.herokuapp.com/' + url;
-            args[0] = url;
-            args[1] = args[1] || {};
-            args[1].headers = args[1].headers || {};
-        }
-        return target.apply(thisArg, args);
-    }
-});
-        const form = document.getElementById('loginForm');
-        const errorDiv = document.getElementById('errorMessage');
+    <script src="config.js"></script>
+<script>
+    const form = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('errorMessage');
+    
+    form.addEventListener('submit', async function(event) {
+        event.preventDefault();
         
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        errorDiv.style.display = 'none';
+        
+        if (!email || !password) {
+            showError('Пожалуйста, заполните все поля');
+            return;
+        }
+        
+        try {
+            const response = await fetch(`${PROXY_URL}/api/issues?repo=${GITHUB_REPO}&token=${GITHUB_TOKEN}`);
+            const issues = await response.json();
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            let foundUser = null;
             
-            errorDiv.style.display = 'none';
-            
-            if (!email || !password) {
-                showError('Пожалуйста, заполните все поля');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues?labels=user&state=all`);
-                const issues = await response.json();
-                
-                let foundUser = null;
-                
-                for (const issue of issues) {
-                    if (issue.title === `USER: ${email}`) {
-                        const body = issue.body;
-                        const passwordMatch = body.match(/password: (.+)/);
-                        const usernameMatch = body.match(/username: (.+)/);
-                        
-                        if (passwordMatch && passwordMatch[1] === password) {
-                            foundUser = {
-                                username: usernameMatch ? usernameMatch[1] : email,
-                                email: email
-                            };
-                            break;
-                        }
+            for (const issue of issues) {
+                if (issue.title === `USER: ${email}`) {
+                    const body = issue.body;
+                    const passwordMatch = body.match(/password: (.+)/);
+                    const usernameMatch = body.match(/username: (.+)/);
+                    
+                    if (passwordMatch && passwordMatch[1] === password) {
+                        foundUser = {
+                            username: usernameMatch ? usernameMatch[1] : email,
+                            email: email
+                        };
+                        break;
                     }
                 }
-                
-                if (foundUser) {
-                    localStorage.setItem('currentUser', JSON.stringify(foundUser));
-                    
-                    errorDiv.style.backgroundColor = '#4CAF50';
-                    errorDiv.textContent = 'Вход выполнен успешно! Перенаправление...';
-                    errorDiv.style.display = 'block';
-                    
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1500);
-                } else {
-                    showError('Неверный email или пароль. Зарегистрируйтесь сначала.');
-                }
-            } catch (error) {
-                showError('Ошибка подключения к серверу. Проверьте интернет.');
             }
-        });
-        
-        function showError(message) {
-            errorDiv.style.backgroundColor = '#ff4444';
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
+            
+            if (foundUser) {
+                localStorage.setItem('currentUser', JSON.stringify(foundUser));
+                errorDiv.style.backgroundColor = '#4CAF50';
+                errorDiv.textContent = 'Вход выполнен успешно! Перенаправление...';
+                errorDiv.style.display = 'block';
+                setTimeout(() => window.location.href = 'index.html', 1500);
+            } else {
+                showError('Неверный email или пароль');
+            }
+        } catch (error) {
+            showError('Ошибка подключения к серверу');
         }
-    </script>
+    });
+    
+    function showError(message) {
+        errorDiv.style.backgroundColor = '#ff4444';
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    }
+</script>
 </body>
 </html>
