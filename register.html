@@ -79,11 +79,14 @@
         </div>
     </footer>
 
-<script src="config.js"></script>
 <script>
     const form = document.getElementById('registerForm');
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
+    
+    // ТОКЕН ВСТАВЛЕН ПРЯМО В КОД
+    const GITHUB_TOKEN = 'ghp_3N3FvvdARjK6uhg2k27MpHYT9WRtpm3iRZQE';
+    const GITHUB_REPO = 'BDrugzy/nikitosearch';
     
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
@@ -117,22 +120,18 @@
         }
         
         try {
-            // Сначала проверяем, существует ли пользователь
-            const checkResponse = await fetch(`${PROXY_URL}/api/issues?repo=${encodeURIComponent(GITHUB_REPO)}&token=${encodeURIComponent(GITHUB_TOKEN)}`);
-            
-            if (!checkResponse.ok) {
-                throw new Error('Ошибка сервера');
-            }
+            // Проверяем, существует ли пользователь
+            const checkResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues?labels=user&state=all`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
             
             const issues = await checkResponse.json();
             
             if (!Array.isArray(issues)) {
-                console.error('Получены не массив:', issues);
-                showError('Ошибка: сервер вернул неверные данные');
+                showError('Ошибка проверки пользователя');
                 return;
             }
             
-            // Проверяем, есть ли уже такой email
             const userExists = issues.some(issue => issue.title === `USER: ${email}`);
             
             if (userExists) {
@@ -140,25 +139,26 @@
                 return;
             }
             
-            // Создаём нового пользователя
-            const response = await fetch(`${PROXY_URL}/api/issues`, {
+            // Создаём пользователя
+            const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
-                    repo: GITHUB_REPO,
-                    token: GITHUB_TOKEN,
                     title: `USER: ${email}`,
-                    body: `username: ${username}\nemail: ${email}\npassword: ${password}\nregistered: ${new Date().toISOString()}`
+                    body: `username: ${username}\nemail: ${email}\npassword: ${password}\nregistered: ${new Date().toISOString()}`,
+                    labels: ['user']
                 })
             });
-            
-            const data = await response.json();
             
             if (response.ok) {
                 successDiv.textContent = 'Регистрация прошла успешно! Перенаправляем на вход...';
                 successDiv.style.display = 'block';
                 setTimeout(() => window.location.href = 'login.html', 2000);
             } else {
+                const data = await response.json();
                 showError(data.message || 'Ошибка регистрации');
             }
         } catch (error) {
