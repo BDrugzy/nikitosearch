@@ -1,3 +1,3 @@
 // GitHub Config
-const GITHUB_TOKEN = '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';
+const GITHUB_TOKEN = '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';
 const GITHUB_REPO = 'BDrugzy/nikitosearch';
