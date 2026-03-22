@@ -88,7 +88,6 @@
         }
         
         try {
-            // Получаем все issues через прокси
             const response = await fetch(`${PROXY_URL}/api/issues?repo=${encodeURIComponent(GITHUB_REPO)}&token=${encodeURIComponent(GITHUB_TOKEN)}`);
             
             if (!response.ok) {
@@ -120,9 +119,7 @@
                 errorDiv.style.backgroundColor = '#4CAF50';
                 errorDiv.textContent = 'Вход выполнен успешно! Перенаправление...';
                 errorDiv.style.display = 'block';
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
+                setTimeout(() => window.location.href = 'index.html', 1500);
             } else {
                 showError('Неверный email или пароль');
             }
