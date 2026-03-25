@@ -113,11 +113,47 @@
             color: #000000;
         }
 
-        /* === СЕТКА КАРТОЧЕК === */
+       /* === СЕТКА КАРТОЧЕК === */
         .games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            gap: 25px;
+        }
+
+        /* === КАРТОЧКА ИГРЫ (ГОРИЗОНТАЛЬНЫЙ ПРЯМОУГОЛЬНИК) === */
+        .game-card {
+            background-color: #000000;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            aspect-ratio: 16 / 9; /* Широкий прямоугольник 16:9 (как у видео) */
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+        }
+        
+        .game-card img {
+            width: 100%;
+            height: 70%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .game-card h3 {
+            color: #FFFFFF;
+            font-size: 16px;
+            margin: 0;
+            padding: 12px 10px;
+            text-align: center;
+            background-color: #000000;
+            height: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* === КАРТОЧКА ИГРЫ === */
