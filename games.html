@@ -2,16 +2,481 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Игры</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игры - Nikitosearch</title>
+    <style>
+        /* === ОСНОВНЫЕ СТИЛИ === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #FFA500;
+            font-family: Arial, sans-serif;
+        }
+
+        /* === ВЕРХНЯЯ ЧЕРНАЯ ПОЛОСА С ПРОФИЛЕМ === */
+        .top-bar {
+            background-color: #000000;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .user-info {
+            color: #FFFFFF;
+            font-size: 14px;
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .user-info span {
+            color: #FFA500;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background-color: #FFA500;
+            color: #000000;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #FF8C00;
+        }
+
+        .login-link {
+            background-color: #FFA500;
+            color: #000000;
+            text-decoration: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .login-link:hover {
+            background-color: #FF8C00;
+        }
+
+        /* === ВЕРХНЕЕ МЕНЮ === */
+        .top-nav {
+            background-color: #000000;
+            padding: 15px 0;
+            text-align: center;
+            border-top: 1px solid #FFA500;
+        }
+
+        .top-nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .top-nav a:hover {
+            text-decoration: underline;
+            color: #FFA500;
+        }
+
+        /* === ОСНОВНОЙ КОНТЕНТ === */
+        .main-content {
+            flex: 1;
+            display: flex;
+            transition: margin-right 0.3s ease;
+        }
+
+        /* === КОНТЕЙНЕР С КАРТОЧКАМИ === */
+        .games-container {
+            flex: 1;
+            padding: 40px 25px;
+            transition: margin-right 0.3s ease;
+        }
+
+        .games-container h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            color: #000000;
+        }
+
+        /* === СЕТКА КАРТОЧЕК === */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* === КАРТОЧКА ИГРЫ === */
+        .game-card {
+            background-color: #000000;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .game-card h3 {
+            color: #FFFFFF;
+            font-size: 20px;
+            margin: 0;
+            padding: 20px 15px;
+            text-align: center;
+            background-color: #000000;
+        }
+
+        /* === БОКОВОЕ МЕНЮ (ВЫЕЗЖАЕТ СПРАВА) === */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background-color: #1a1a1a;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .side-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            background-color: #FFA500;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-header h2 {
+            color: #000000;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
+        .panel-content {
+            padding: 20px;
+            color: #FFFFFF;
+            flex: 1;
+        }
+
+        .panel-content h3 {
+            color: #FFA500;
+            margin-bottom: 15px;
+        }
+
+        .panel-content p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .game-specs {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        .game-specs h4 {
+            color: #FFA500;
+            margin-bottom: 10px;
+        }
+
+        /* === ОВЕРЛЕЙ (ЗАТЕМНЕНИЕ) === */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* === ФУТЕР === */
+        footer {
+            background-color: #000000;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #FFFFFF;
+            text-decoration: none;
+            margin: 0 15px;
+            display: inline-block;
+        }
+
+        footer a:hover {
+            color: #FFA500;
+        }
+
+        .footer-links {
+            margin-bottom: 15px;
+        }
+
+        .footer-note p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #CCCCCC;
+        }
+
+        /* === АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ === */
+        @media (max-width: 768px) {
+            .top-nav a {
+                margin: 0 10px;
+                font-size: 14px;
+            }
+            
+            .games-container {
+                padding: 20px 15px;
+            }
+            
+            .games-container h1 {
+                font-size: 24px;
+            }
+            
+            .side-panel {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .game-card h3 {
+                font-size: 16px;
+                padding: 15px 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Заголовок страницы</h1>
-    <p>Какой-то текст...</p>
+    <!-- ВЕРХНЯЯ ЧЕРНАЯ ПОЛОСА С ПРОФИЛЕМ -->
+    <div id="userPanel" class="top-bar"></div>
+
+    <!-- ВЕРХНЕЕ МЕНЮ -->
     <nav class="top-nav">
         <a href="index.html">Главная</a>
         <a href="games.html">Игры</a>
-        <a href="items.html">Предметы</a>
         <a href="graphics.html">Графика</a>
+        <a href="items.html">Предметы</a>
     </nav>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div class="main-content">
+        <div class="games-container">
+            <h1>Все игры</h1>
+            <div class="games-grid" id="gamesGrid">
+                <!-- Карточки игр будут добавлены через JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ЗАТЕМНЕНИЕ -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- БОКОВОЕ МЕНЮ -->
+    <div class="side-panel" id="sidePanel">
+        <div class="panel-header">
+            <h2 id="gameTitle">Название игры</h2>
+            <button class="close-btn" id="closePanel">×</button>
+        </div>
+        <div class="panel-content" id="panelContent">
+            <!-- Содержимое будет добавляться динамически -->
+            <p>Здесь будет описание игры...</p>
+            <div class="game-specs">
+                <h4>Информация</h4>
+                <p>Вы можете добавить любые детали: системные требования, сюжет, геймплей и т.д.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer>
+        <div class="footer-links">
+            <a href="login.html">Вход</a>
+            <a href="register.html">Регистрация</a>
+            <a href="mailto:akimivanov02@gmail.com">Связь с нами</a>
+        </div>
+        <div class="footer-note">
+            <p>© 2026 ООО Босс Никитосс</p>
+        </div>
+    </footer>
+
+    <script>
+        // Проверяем авторизацию
+        function checkAuth() {
+            const currentUser = localStorage.getItem('currentUser');
+            const userPanel = document.getElementById('userPanel');
+            
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                userPanel.innerHTML = `
+                    <div class="user-info">
+                        👋 Здравствуйте, <span>${user.username}</span>!
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Выйти</button>
+                `;
+            } else {
+                userPanel.innerHTML = `
+                    <a href="login.html" class="login-link">Войти в аккаунт</a>
+                `;
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+        
+        // Данные игр (вы можете добавлять новые игры сюда)
+        const games = [
+            {
+                id: 1,
+                title: "BANDAI NINTENDO",
+                image: "Снимок экрана 2026-03-21 200534-side.png",
+                description: "Описание игры BANDAI NINTENDO. Здесь вы можете написать подробности о сюжете, геймплее и особенностях игры.",
+                specs: "Жанр: Экшен | Год выпуска: 2025 | Разработчик: Bandai Namco"
+            },
+            {
+                id: 2,
+                title: "HELLO WORLD 3",
+                image: "Снимок экрана 2026-03-21 200534-side.png",
+                description: "Описание игры HELLO WORLD 3. Захватывающее приключение в мире программирования и технологий.",
+                specs: "Жанр: Приключения | Год выпуска: 2024 | Разработчик: TechGames"
+            },
+            {
+                id: 3,
+                title: "DEATH STRANDING 2",
+                image: "Снимок экрана 2026-03-21 200534-side.png",
+                description: "Описание игры DEATH STRANDING 2. Продолжение культового экшена от Хидео Кодзимы.",
+                specs: "Жанр: Экшен | Год выпуска: 2025 | Разработчик: Kojima Productions"
+            },
+            {
+                id: 4,
+                title: "DYING LIGHT THE BEAST",
+                image: "Снимок экрана 2026-03-21 200534-side.png",
+                description: "Описание игры DYING LIGHT THE BEAST. Новое дополнение к популярному зомби-экшену.",
+                specs: "Жанр: Survival Horror | Год выпуска: 2024 | Разработчик: Techland"
+            }
+        ];
+        
+        // Функция для отображения карточек игр
+        function renderGames() {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = '';
+            
+            games.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.setAttribute('data-id', game.id);
+                card.innerHTML = `
+                    <img src="${game.image}" alt="${game.title}">
+                    <h3>${game.title}</h3>
+                `;
+                card.addEventListener('click', () => openGameDetails(game));
+                grid.appendChild(card);
+            });
+        }
+        
+        // Функция открытия бокового меню с деталями игры
+        function openGameDetails(game) {
+            const panel = document.getElementById('sidePanel');
+            const overlay = document.getElementById('overlay');
+            const gameTitle = document.getElementById('gameTitle');
+            const panelContent = document.getElementById('panelContent');
+            
+            gameTitle.textContent = game.title;
+            panelContent.innerHTML = `
+                <p>${game.description}</p>
+                <div class="game-specs">
+                    <h4>Информация</h4>
+                    <p>${game.specs}</p>
+                </div>
+                <div class="game-specs">
+                    <h4>Дополнительно</h4>
+                    <p>Здесь вы можете добавить любые другие детали: системные требования, скриншоты, ссылки и т.д.</p>
+                </div>
+            `;
+            
+            panel.classList.add('open');
+            overlay.classList.add('active');
+        }
+        
+        // Закрытие бокового меню
+        function closePanel() {
+            const panel = document.getElementById('sidePanel');
+            const overlay = document.getElementById('overlay');
+            panel.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+        
+        // Навешиваем обработчики
+        document.getElementById('closePanel').addEventListener('click', closePanel);
+        document.getElementById('overlay').addEventListener('click', closePanel);
+        
+        // Инициализация
+        checkAuth();
+        renderGames();
+        
+        // Закрытие по ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePanel();
+            }
+        });
+    </script>
 </body>
 </html>
