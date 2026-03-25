@@ -2,31 +2,45 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Графика - Nikitosearch</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background-color: #FFA500;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
-        .container {
-            background-color: #000000;
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 800px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
-        h1 { color: #FFA500; margin-bottom: 20px; }
+
+        .game-header {
+            background-color: #000000;
+            padding: 20px 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .game-header h1 {
+            color: #FFA500;
+            font-size: 28px;
+        }
+
         .back-link {
-            display: inline-block;
-            margin-top: 30px;
             color: #FFA500;
             text-decoration: none;
             padding: 10px 20px;
@@ -34,23 +48,216 @@
             border-radius: 8px;
             transition: all 0.2s;
         }
-        .back-link:hover { background-color: #FFA500; color: #000000; }
-        .game-title { font-size: 24px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #FFA500; }
-        .info-block { margin-top: 20px; padding: 15px; background-color: #222; border-radius: 12px; }
-        .info-block h3 { color: #FFA500; margin-bottom: 10px; }
+
+        .back-link:hover {
+            background-color: #FFA500;
+            color: #000000;
+        }
+
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .settings-panel {
+            flex: 1;
+            min-width: 320px;
+            background-color: #000000;
+            border-radius: 20px;
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .settings-panel h2 {
+            color: #FFA500;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .setting-item {
+            margin-bottom: 25px;
+        }
+
+        .setting-item label {
+            display: flex;
+            justify-content: space-between;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .setting-value {
+            color: #FFA500;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: #333;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #FFA500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #FF8C00;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            flex: 1;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .preset-btn:hover {
+            background-color: #FFA500;
+            color: #000000;
+        }
+
+        .preview-panel {
+            flex: 1;
+            min-width: 400px;
+            background-color: #000000;
+            border-radius: 20px;
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .preview-panel h2 {
+            color: #FFA500;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .preview-container {
+            background-color: #1a1a1a;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            position: relative;
+        }
+
+        .preview-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .preview-label {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: rgba(0,0,0,0.7);
+            color: #FFA500;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎮 Настройки графики</h1>
-        <div class="game-title" id="gameTitle">Загрузка...</div>
-        <div class="info-block"><h3>Рекомендуемые настройки</h3><p>Здесь будет информация о графических настройках для выбранной игры.</p></div>
-        <div class="info-block"><h3>Системные требования</h3><p>Минимальные: ...<br>Рекомендуемые: ...</p></div>
-        <a href="games.html" class="back-link">← Вернуться к играм</a>
+    <div class="main-container">
+        <div class="game-header">
+            <h1 id="gameTitle">Загрузка...</h1>
+            <a href="games.html" class="back-link">← Вернуться к играм</a>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="settings-panel">
+                <h2>⚙️ Настройки графики</h2>
+                
+                <div class="setting-item">
+                    <label>Качество текстур <span class="setting-value" id="texturesVal">Средние</span></label>
+                    <input type="range" id="textures" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Тени <span class="setting-value" id="shadowsVal">Средние</span></label>
+                    <input type="range" id="shadows" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Детализация теней <span class="setting-value" id="shadowDetailsVal">Средняя</span></label>
+                    <input type="range" id="shadowDetails" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Сглаживание <span class="setting-value" id="aaVal">Среднее</span></label>
+                    <input type="range" id="aa" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Качество отражений <span class="setting-value" id="reflectionsVal">Среднее</span></label>
+                    <input type="range" id="reflections" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Освещение <span class="setting-value" id="lightingVal">Среднее</span></label>
+                    <input type="range" id="lighting" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Постобработка <span class="setting-value" id="postprocessingVal">Средняя</span></label>
+                    <input type="range" id="postprocessing" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Детализация объектов <span class="setting-value" id="objectsVal">Средняя</span></label>
+                    <input type="range" id="objects" min="0" max="2" step="1" value="1">
+                </div>
+                
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="setPreset(0)">🟢 Низкие</button>
+                    <button class="preset-btn" onclick="setPreset(1)">🟡 Средние</button>
+                    <button class="preset-btn" onclick="setPreset(2)">🔴 Ультра</button>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                <h2>🎮 Превью</h2>
+                <div class="preview-container">
+                    <img id="previewImage" src="" alt="Превью игры">
+                    <div class="preview-label" id="qualityLabel">Средние настройки</div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const gameId = urlParams.get('id');
+        
         const games = [
             { id: 1, title: "BATTLEFIELD 2042" },
             { id: 2, title: "HELLDIVERS 2" },
@@ -58,8 +265,90 @@
             { id: 4, title: "DYING LIGHT THE BEAST" },
             { id: 5, title: "HOGWARTS LEGACY" }
         ];
+        
         const game = games.find(g => g.id == gameId);
-        document.getElementById('gameTitle').textContent = game ? game.title : "Игра не найдена";
+        if (game) {
+            document.getElementById('gameTitle').textContent = `🎮 ${game.title} — Настройки графики`;
+        } else {
+            document.getElementById('gameTitle').textContent = "Игра не найдена";
+        }
+        
+        const qualityNames = ['Низкие', 'Средние', 'Ультра'];
+        
+        // Функция для генерации ключа настроек
+        function getSettingsKey() {
+            const textures = document.getElementById('textures').value;
+            const shadows = document.getElementById('shadows').value;
+            const shadowDetails = document.getElementById('shadowDetails').value;
+            const aa = document.getElementById('aa').value;
+            const reflections = document.getElementById('reflections').value;
+            const lighting = document.getElementById('lighting').value;
+            const postprocessing = document.getElementById('postprocessing').value;
+            const objects = document.getElementById('objects').value;
+            
+            return `${textures}-${shadows}-${shadowDetails}-${aa}-${reflections}-${lighting}-${postprocessing}-${objects}`;
+        }
+        
+        // Обновление картинки на основе комбинации настроек
+        function updatePreview() {
+            const settingsKey = getSettingsKey();
+            const imgElement = document.getElementById('previewImage');
+            
+            // Формируем путь к картинке: для каждой игры отдельная папка
+            // Например: images/1/textures2_shadows1_...jpg
+            const imagePath = `images/${gameId}/preview_${settingsKey}.jpg`;
+            
+            imgElement.src = imagePath;
+            
+            // Если картинка не найдена — показываем заглушку
+            imgElement.onerror = function() {
+                imgElement.src = 'images/placeholder.jpg';
+            };
+            
+            // Обновляем текст (показываем среднее качество для информации)
+            const values = [textures.value, shadows.value, shadowDetails.value, aa.value, reflections.value, lighting.value, postprocessing.value, objects.value];
+            const avg = Math.round(values.reduce((a,b) => a + parseInt(b), 0) / values.length);
+            document.getElementById('qualityLabel').textContent = `Настройки: ${qualityNames[avg]}`;
+        }
+        
+        // Обновление текста у ползунков
+        function updateSliderValue(sliderId, valId) {
+            const val = document.getElementById(sliderId).value;
+            document.getElementById(valId).textContent = qualityNames[val];
+        }
+        
+        function updateAllSliderValues() {
+            updateSliderValue('textures', 'texturesVal');
+            updateSliderValue('shadows', 'shadowsVal');
+            updateSliderValue('shadowDetails', 'shadowDetailsVal');
+            updateSliderValue('aa', 'aaVal');
+            updateSliderValue('reflections', 'reflectionsVal');
+            updateSliderValue('lighting', 'lightingVal');
+            updateSliderValue('postprocessing', 'postprocessingVal');
+            updateSliderValue('objects', 'objectsVal');
+            updatePreview();
+        }
+        
+        function setPreset(level) {
+            const sliders = ['textures', 'shadows', 'shadowDetails', 'aa', 'reflections', 'lighting', 'postprocessing', 'objects'];
+            sliders.forEach(slider => {
+                document.getElementById(slider).value = level;
+            });
+            updateAllSliderValues();
+        }
+        
+        // Назначаем обработчики на все ползунки
+        const sliders = ['textures', 'shadows', 'shadowDetails', 'aa', 'reflections', 'lighting', 'postprocessing', 'objects'];
+        sliders.forEach(slider => {
+            const input = document.getElementById(slider);
+            input.addEventListener('input', () => {
+                const valId = slider + 'Val';
+                document.getElementById(valId).textContent = qualityNames[input.value];
+                updatePreview();
+            });
+        });
+        
+        updateAllSliderValues();
     </script>
 </body>
 </html>
