@@ -74,7 +74,7 @@
             background-color: #FF8C00;
         }
 
-        /* === ВЕРХНЕЕ МЕНЮ === */
+        /* === ВЕРХНЕЕ МЕНЮ (ТОЛЬКО ГЛАВНАЯ И ИГРЫ) === */
         .top-nav {
             background-color: #000000;
             padding: 15px 0;
@@ -85,7 +85,7 @@
         .top-nav a {
             color: #FFFFFF;
             text-decoration: none;
-            margin: 0 20px;
+            margin: 0 25px;
             font-size: 18px;
             font-weight: bold;
         }
@@ -99,14 +99,12 @@
         .main-content {
             flex: 1;
             display: flex;
-            transition: margin-right 0.3s ease;
         }
 
         /* === КОНТЕЙНЕР С КАРТОЧКАМИ === */
         .games-container {
             flex: 1;
             padding: 40px 25px;
-            transition: margin-right 0.3s ease;
         }
 
         .games-container h1 {
@@ -200,18 +198,56 @@
             color: #ffffff;
         }
 
+        /* === ВКЛАДКИ В БОКОВОМ МЕНЮ === */
+        .panel-tabs {
+            display: flex;
+            background-color: #333;
+            border-bottom: 1px solid #FFA500;
+        }
+
+        .panel-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            background-color: #333;
+            border: none;
+            font-size: 16px;
+        }
+
+        .panel-tab.active {
+            background-color: #FFA500;
+            color: #000000;
+        }
+
+        .panel-tab:hover:not(.active) {
+            background-color: #444;
+        }
+
         .panel-content {
             padding: 20px;
             color: #FFFFFF;
             flex: 1;
         }
 
-        .panel-content h3 {
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content h3 {
             color: #FFA500;
             margin-bottom: 15px;
         }
 
-        .panel-content p {
+        .tab-content p {
             line-height: 1.6;
             margin-bottom: 20px;
         }
@@ -278,8 +314,8 @@
         /* === АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ === */
         @media (max-width: 768px) {
             .top-nav a {
-                margin: 0 10px;
-                font-size: 14px;
+                margin: 0 15px;
+                font-size: 16px;
             }
             
             .games-container {
@@ -306,12 +342,10 @@
     <!-- ВЕРХНЯЯ ЧЕРНАЯ ПОЛОСА С ПРОФИЛЕМ -->
     <div id="userPanel" class="top-bar"></div>
 
-    <!-- ВЕРХНЕЕ МЕНЮ -->
+    <!-- ВЕРХНЕЕ МЕНЮ (ТОЛЬКО ГЛАВНАЯ И ИГРЫ) -->
     <nav class="top-nav">
         <a href="index.html">Главная</a>
         <a href="games.html">Игры</a>
-        <a href="graphics.html">Графика</a>
-        <a href="items.html">Предметы</a>
     </nav>
 
     <!-- ОСНОВНОЙ КОНТЕНТ -->
@@ -327,18 +361,45 @@
     <!-- ЗАТЕМНЕНИЕ -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- БОКОВОЕ МЕНЮ -->
+    <!-- БОКОВОЕ МЕНЮ С ВКЛАДКАМИ -->
     <div class="side-panel" id="sidePanel">
         <div class="panel-header">
             <h2 id="gameTitle">Название игры</h2>
             <button class="close-btn" id="closePanel">×</button>
         </div>
-        <div class="panel-content" id="panelContent">
-            <!-- Содержимое будет добавляться динамически -->
-            <p>Здесь будет описание игры...</p>
-            <div class="game-specs">
-                <h4>Информация</h4>
-                <p>Вы можете добавить любые детали: системные требования, сюжет, геймплей и т.д.</p>
+        
+        <!-- ВКЛАДКИ -->
+        <div class="panel-tabs">
+            <button class="panel-tab active" data-tab="description">Описание</button>
+            <button class="panel-tab" data-tab="graphics">Графика</button>
+            <button class="panel-tab" data-tab="items">Предметы</button>
+        </div>
+        
+        <!-- СОДЕРЖИМОЕ ВКЛАДОК -->
+        <div class="panel-content">
+            <div id="description-tab" class="tab-content active">
+                <h3>Описание игры</h3>
+                <p id="gameDescription">Здесь будет описание игры...</p>
+                <div class="game-specs">
+                    <h4>Информация</h4>
+                    <p id="gameSpecs">Жанр: Экшен | Год выпуска: 2025 | Разработчик: Bandai Namco</p>
+                </div>
+            </div>
+            <div id="graphics-tab" class="tab-content">
+                <h3>Графика</h3>
+                <p>Здесь вы можете добавить информацию о графических настройках, системных требованиях, рекомендуемых параметрах для данной игры.</p>
+                <div class="game-specs">
+                    <h4>Системные требования</h4>
+                    <p>Минимальные: ...<br>Рекомендуемые: ...</p>
+                </div>
+            </div>
+            <div id="items-tab" class="tab-content">
+                <h3>Предметы</h3>
+                <p>Здесь вы можете добавить информацию о предметах, оружии, броне, ресурсах и других внутриигровых объектах.</p>
+                <div class="game-specs">
+                    <h4>Список предметов</h4>
+                    <p>Список предметов будет добавлен позже...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -387,7 +448,7 @@
                 id: 1,
                 title: "BANDAI NINTENDO",
                 image: "Снимок экрана 2026-03-21 200534-side.png",
-                description: "Описание игры BANDAI NINTENDO. Здесь вы можете написать подробности о сюжете, геймплее и особенностях игры.",
+                description: "Описание игры BANDAI NINTENDO. Захватывающее приключение в мире японских игр.",
                 specs: "Жанр: Экшен | Год выпуска: 2025 | Разработчик: Bandai Namco"
             },
             {
@@ -436,23 +497,25 @@
             const panel = document.getElementById('sidePanel');
             const overlay = document.getElementById('overlay');
             const gameTitle = document.getElementById('gameTitle');
-            const panelContent = document.getElementById('panelContent');
+            const gameDescription = document.getElementById('gameDescription');
+            const gameSpecs = document.getElementById('gameSpecs');
             
             gameTitle.textContent = game.title;
-            panelContent.innerHTML = `
-                <p>${game.description}</p>
-                <div class="game-specs">
-                    <h4>Информация</h4>
-                    <p>${game.specs}</p>
-                </div>
-                <div class="game-specs">
-                    <h4>Дополнительно</h4>
-                    <p>Здесь вы можете добавить любые другие детали: системные требования, скриншоты, ссылки и т.д.</p>
-                </div>
-            `;
+            gameDescription.textContent = game.description;
+            gameSpecs.textContent = game.specs;
             
             panel.classList.add('open');
             overlay.classList.add('active');
+            
+            // Сбрасываем активную вкладку на "Описание"
+            document.querySelectorAll('.panel-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelector('.panel-tab[data-tab="description"]').classList.add('active');
+            document.getElementById('description-tab').classList.add('active');
         }
         
         // Закрытие бокового меню
@@ -463,6 +526,26 @@
             overlay.classList.remove('active');
         }
         
+        // Переключение вкладок
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.panel-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    
+                    // Убираем активный класс у всех вкладок и контента
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Активируем выбранную вкладку
+                    tab.classList.add('active');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                });
+            });
+        }
+        
         // Навешиваем обработчики
         document.getElementById('closePanel').addEventListener('click', closePanel);
         document.getElementById('overlay').addEventListener('click', closePanel);
@@ -470,6 +553,7 @@
         // Инициализация
         checkAuth();
         renderGames();
+        setupTabs();
         
         // Закрытие по ESC
         document.addEventListener('keydown', function(e) {
