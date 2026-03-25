@@ -15,19 +15,19 @@
             background-color: #FFA500;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px;
         }
 
         .main-container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         .game-header {
             background-color: #000000;
-            padding: 20px 30px;
-            border-radius: 20px;
-            margin-bottom: 30px;
+            padding: 25px 35px;
+            border-radius: 24px;
+            margin-bottom: 35px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -37,16 +37,17 @@
 
         .game-header h1 {
             color: #FFA500;
-            font-size: 28px;
+            font-size: 32px;
         }
 
         .back-link {
             color: #FFA500;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #333;
-            border-radius: 8px;
+            border-radius: 12px;
             transition: all 0.2s;
+            font-weight: bold;
         }
 
         .back-link:hover {
@@ -56,59 +57,62 @@
 
         .content-wrapper {
             display: flex;
-            gap: 30px;
+            gap: 35px;
             flex-wrap: wrap;
         }
 
         .settings-panel {
-            flex: 1;
-            min-width: 320px;
+            flex: 1.2;
+            min-width: 380px;
             background-color: #000000;
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: 28px;
+            padding: 35px;
             height: fit-content;
         }
 
         .settings-panel h2 {
             color: #FFA500;
-            margin-bottom: 25px;
-            font-size: 24px;
+            margin-bottom: 35px;
+            font-size: 28px;
             text-align: center;
         }
 
         .setting-item {
-            margin-bottom: 25px;
+            margin-bottom: 28px;
         }
 
         .setting-item label {
             display: flex;
             justify-content: space-between;
             color: #FFFFFF;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-weight: bold;
+            font-size: 16px;
         }
 
         .setting-value {
             color: #FFA500;
+            font-weight: bold;
         }
 
         input[type="range"] {
             width: 100%;
-            height: 6px;
+            height: 8px;
             -webkit-appearance: none;
             background: #333;
-            border-radius: 5px;
+            border-radius: 10px;
             outline: none;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: #FFA500;
             cursor: pointer;
             transition: all 0.2s;
+            border: 2px solid #fff;
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
@@ -118,8 +122,8 @@
 
         .preset-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
             flex-wrap: wrap;
         }
 
@@ -128,11 +132,12 @@
             background-color: #333;
             color: white;
             border: none;
-            padding: 8px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .preset-btn:hover {
@@ -141,29 +146,30 @@
         }
 
         .preview-panel {
-            flex: 1;
-            min-width: 400px;
+            flex: 1.5;
+            min-width: 500px;
             background-color: #000000;
-            border-radius: 20px;
-            padding: 25px;
+            border-radius: 28px;
+            padding: 35px;
             position: sticky;
-            top: 20px;
+            top: 30px;
             height: fit-content;
         }
 
         .preview-panel h2 {
             color: #FFA500;
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin-bottom: 25px;
+            font-size: 28px;
             text-align: center;
         }
 
         .preview-container {
             background-color: #1a1a1a;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             aspect-ratio: 16 / 9;
             position: relative;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
 
         .preview-container img {
@@ -175,14 +181,15 @@
 
         .preview-label {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background-color: rgba(0,0,0,0.7);
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0,0,0,0.8);
             color: #FFA500;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 14px;
             font-weight: bold;
+            backdrop-filter: blur(4px);
         }
     </style>
 </head>
@@ -245,7 +252,7 @@
             </div>
 
             <div class="preview-panel">
-                <h2>🎮 Превью</h2>
+                <h2>🎮 Графика</h2>
                 <div class="preview-container">
                     <img id="previewImage" src="" alt="Превью игры">
                     <div class="preview-label" id="qualityLabel">Средние настройки</div>
@@ -275,8 +282,7 @@
         
         const qualityNames = ['Низкие', 'Средние', 'Ультра'];
         
-        // Функция для генерации ключа настроек
-        function getSettingsKey() {
+        function getPreviewImage() {
             const textures = document.getElementById('textures').value;
             const shadows = document.getElementById('shadows').value;
             const shadowDetails = document.getElementById('shadowDetails').value;
@@ -286,32 +292,43 @@
             const postprocessing = document.getElementById('postprocessing').value;
             const objects = document.getElementById('objects').value;
             
-            return `${textures}-${shadows}-${shadowDetails}-${aa}-${reflections}-${lighting}-${postprocessing}-${objects}`;
+            const values = [textures, shadows, shadowDetails, aa, reflections, lighting, postprocessing, objects];
+            const allSame = values.every(v => v === values[0]);
+            
+            if (allSame) {
+                const level = parseInt(values[0]);
+                const levelName = level === 0 ? 'low' : (level === 1 ? 'medium' : 'ultra');
+                return `images/${gameId}/${levelName}.jpg`;
+            } else {
+                const settingsKey = values.join('-');
+                return `images/${gameId}/custom_${settingsKey}.jpg`;
+            }
         }
         
-        // Обновление картинки на основе комбинации настроек
         function updatePreview() {
-            const settingsKey = getSettingsKey();
             const imgElement = document.getElementById('previewImage');
-            
-            // Формируем путь к картинке: для каждой игры отдельная папка
-            // Например: images/1/textures2_shadows1_...jpg
-            const imagePath = `images/${gameId}/preview_${settingsKey}.jpg`;
+            const imagePath = getPreviewImage();
             
             imgElement.src = imagePath;
             
-            // Если картинка не найдена — показываем заглушку
             imgElement.onerror = function() {
                 imgElement.src = 'images/placeholder.jpg';
             };
             
-            // Обновляем текст (показываем среднее качество для информации)
-            const values = [textures.value, shadows.value, shadowDetails.value, aa.value, reflections.value, lighting.value, postprocessing.value, objects.value];
+            const textures = document.getElementById('textures').value;
+            const shadows = document.getElementById('shadows').value;
+            const shadowDetails = document.getElementById('shadowDetails').value;
+            const aa = document.getElementById('aa').value;
+            const reflections = document.getElementById('reflections').value;
+            const lighting = document.getElementById('lighting').value;
+            const postprocessing = document.getElementById('postprocessing').value;
+            const objects = document.getElementById('objects').value;
+            
+            const values = [textures, shadows, shadowDetails, aa, reflections, lighting, postprocessing, objects];
             const avg = Math.round(values.reduce((a,b) => a + parseInt(b), 0) / values.length);
             document.getElementById('qualityLabel').textContent = `Настройки: ${qualityNames[avg]}`;
         }
         
-        // Обновление текста у ползунков
         function updateSliderValue(sliderId, valId) {
             const val = document.getElementById(sliderId).value;
             document.getElementById(valId).textContent = qualityNames[val];
@@ -337,7 +354,6 @@
             updateAllSliderValues();
         }
         
-        // Назначаем обработчики на все ползунки
         const sliders = ['textures', 'shadows', 'shadowDetails', 'aa', 'reflections', 'lighting', 'postprocessing', 'objects'];
         sliders.forEach(slider => {
             const input = document.getElementById(slider);
