@@ -2,16 +2,67 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Игры</title>
+    <title>Предметы - Nikitosearch</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #FFA500;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #000000;
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 { color: #FFA500; margin-bottom: 20px; }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #FFA500;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #333;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .back-link:hover { background-color: #FFA500; color: #000000; }
+        .game-title { font-size: 24px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #FFA500; }
+        .items-list { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .item-card { background-color: #222; padding: 15px; border-radius: 12px; }
+        .item-card h3 { color: #FFA500; margin-bottom: 8px; }
+    </style>
 </head>
 <body>
-    <h1>Заголовок страницы</h1>
-    <p>Какой-то текст...</p>
-    <nav class="top-nav">
-        <a href="index.html">Главная</a>
-        <a href="games.html">Игры</a>
-        <a href="items.html">Предметы</a>
-        <a href="graphics.html">Графика</a>
-    </nav>
+    <div class="container">
+        <h1>📦 Предметы</h1>
+        <div class="game-title" id="gameTitle">Загрузка...</div>
+        <div class="items-list">
+            <div class="item-card"><h3>Предмет 1</h3><p>Описание предмета для этой игры...</p></div>
+            <div class="item-card"><h3>Предмет 2</h3><p>Описание предмета...</p></div>
+        </div>
+        <a href="games.html" class="back-link">← Вернуться к играм</a>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get('id');
+        const games = [
+            { id: 1, title: "BATTLEFIELD 2042" },
+            { id: 2, title: "HELLDIVERS 2" },
+            { id: 3, title: "DEATH STRANDING 2" },
+            { id: 4, title: "DYING LIGHT THE BEAST" },
+            { id: 5, title: "HOGWARTS LEGACY" }
+        ];
+        const game = games.find(g => g.id == gameId);
+        document.getElementById('gameTitle').textContent = game ? game.title : "Игра не найдена";
+    </script>
 </body>
 </html>
