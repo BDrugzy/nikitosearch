@@ -14,36 +14,39 @@
         body {
             background-color: #FFA500;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            padding: 30px;
+            height: 100vh;
+            overflow: hidden;
+            padding: 20px;
         }
 
         .main-container {
             max-width: 1600px;
+            height: 100%;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .game-header {
             background-color: #000000;
-            padding: 25px 35px;
+            padding: 20px 30px;
             border-radius: 24px;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            flex-shrink: 0;
         }
 
         .game-header h1 {
             color: #FFA500;
-            font-size: 32px;
+            font-size: 28px;
         }
 
         .back-link {
             color: #FFA500;
             text-decoration: none;
-            padding: 12px 24px;
+            padding: 10px 22px;
             background-color: #333;
             border-radius: 12px;
             transition: all 0.2s;
@@ -57,37 +60,39 @@
 
         .content-wrapper {
             display: flex;
-            gap: 35px;
-            flex-wrap: wrap;
+            gap: 25px;
+            flex: 1;
+            min-height: 0;
         }
 
         .settings-panel {
-            flex: 1.2;
-            min-width: 380px;
+            flex: 1;
+            min-width: 320px;
             background-color: #000000;
-            border-radius: 28px;
-            padding: 35px;
-            height: fit-content;
+            border-radius: 24px;
+            padding: 25px;
+            overflow-y: auto;
+            height: 100%;
         }
 
         .settings-panel h2 {
             color: #FFA500;
-            margin-bottom: 35px;
-            font-size: 28px;
+            margin-bottom: 25px;
+            font-size: 24px;
             text-align: center;
         }
 
         .setting-item {
-            margin-bottom: 28px;
+            margin-bottom: 22px;
         }
 
         .setting-item label {
             display: flex;
             justify-content: space-between;
             color: #FFFFFF;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .setting-value {
@@ -97,7 +102,7 @@
 
         input[type="range"] {
             width: 100%;
-            height: 8px;
+            height: 6px;
             -webkit-appearance: none;
             background: #333;
             border-radius: 10px;
@@ -106,8 +111,8 @@
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #FFA500;
             cursor: pointer;
@@ -116,15 +121,14 @@
         }
 
         input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
+            transform: scale(1.15);
             background: #FF8C00;
         }
 
         .preset-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         .preset-btn {
@@ -132,11 +136,11 @@
             background-color: #333;
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 12px;
+            padding: 10px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
         }
 
@@ -146,28 +150,28 @@
         }
 
         .preview-panel {
-            flex: 1.5;
-            min-width: 500px;
+            flex: 1.8;
             background-color: #000000;
-            border-radius: 28px;
-            padding: 35px;
-            position: sticky;
-            top: 30px;
-            height: fit-content;
+            border-radius: 24px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .preview-panel h2 {
             color: #FFA500;
-            margin-bottom: 25px;
-            font-size: 28px;
+            margin-bottom: 20px;
+            font-size: 24px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .preview-container {
             background-color: #1a1a1a;
             border-radius: 20px;
             overflow: hidden;
-            aspect-ratio: 16 / 9;
+            flex: 1;
             position: relative;
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
         }
@@ -175,21 +179,20 @@
         .preview-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             transition: opacity 0.3s ease;
         }
 
         .preview-label {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             background-color: rgba(0,0,0,0.8);
             color: #FFA500;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 14px;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 13px;
             font-weight: bold;
-            backdrop-filter: blur(4px);
         }
     </style>
 </head>
